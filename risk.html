@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Risk Visualisations</title>
+    <link rel="stylesheet" href="static/bulma.min.css">
+    <link rel="stylesheet" href="static/view.css">
+</head>
+<body id="root">
+<div id="loading-wrapper">
+    <div id="loading-text">LOADING</div>
+    <div id="loading-content"></div>
+</div>
+<div id="content" class="container is-hidden">
+    <h1 class="title">Plastics Plots</h1>
+    <div class="columns">
+        <div class="column is-6">
+            <form id="app">
+                <div class="field">
+                    <label class="label">Title</label>
+                    <div class="control">
+                        <div class="columns" style="margin-bottom:0" v-for="(line, index) in titleLines">
+                            <div class="column 8">
+                                <input class="input" v-model="line[0]">
+                            </div>
+                            <div class="column is-2">
+                                <input class="input" v-model="line[1]" type="color">
+                            </div>
+                            <div class="column is-2">
+                                <button class="button is-info" @click="addTitleLine"
+                                        v-if="index == Object.keys(titleLines).length - 1">&plus;
+                                </button>
+                                <button v-else class="button is-danger"
+                                        @click="(event) => removeTitleLine(event, index)">
+                                    &minus;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Display percentages at</label>
+                    <div class="control">
+                        <input class="input" v-model="ticks">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Risks</label>
+                    <div class="columns" style="margin-bottom:0" v-for="(bar, index) in bars">
+                        <div class="column is-4 control">
+                            <input class="input" v-model="bar.label">
+                        </div>
+                        <div class="column is-2 control">
+                            <input class="input" type="number" v-model="bar.value">
+                        </div>
+                        <div class="select mt-3 mr-2">
+                            <select v-model="bar.severity">
+                                <option value="mild">Mild</option>
+                                <option value="minor">Minor</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="significant">Significant</option>
+                                <option value="severe">Severe</option>
+                            </select>
+                        </div>
+                        <div class="select mt-3">
+                            <select v-model="bar.color">
+                                <option value="green">Green</option>
+                                <option value="grey">Grey</option>
+                                <option value="red">Red</option>
+                            </select>
+                        </div>
+                        <div class="column is-2 control">
+                            <button class="button is-info" @click="addBar"
+                                    v-if="index == Object.keys(bars).length - 1">&plus;
+                            </button>
+                            <button v-else class="button is-danger"
+                                    @click="(event) => removeBar(event, index)">
+                                &minus;
+                            </button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" v-model="draw_arrows">
+                            Draw arrows
+                        </label>
+                    </div>
+                    <button class="button is-success" @click="render" :disabled="rendering">Visualise</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="static/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.21.0a3/full/pyodide.js"></script>
+<script src="static/main.js"></script>
+</body>
+</html>

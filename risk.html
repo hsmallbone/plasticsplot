@@ -12,7 +12,7 @@
     <div id="loading-content"></div>
 </div>
 <div id="content" class="container is-hidden">
-    <h1 class="title">Plastics Plots</h1>
+    <h1 class="title">Plastics Risk Visualiser</h1>
     <div class="columns">
         <div class="column is-6">
             <form id="app">
@@ -64,9 +64,9 @@
                         </div>
                         <div class="select mt-3">
                             <select v-model="bar.color">
-                                <option value="green">Green</option>
-                                <option value="grey">Grey</option>
-                                <option value="red">Red</option>
+                                <option value="green">Benefits</option>
+                                <option value="grey">Everyday Risks</option>
+                                <option value="red">Risks</option>
                             </select>
                         </div>
                         <div class="column is-2 control">
@@ -81,18 +81,34 @@
                     </div>
                     <div class="field">
                         <label class="checkbox">
-                            <input type="checkbox" v-model="draw_arrows">
-                            Draw arrows
+                            <input type="checkbox" v-model="tight">
+                            Place textboxes close to wedges
                         </label>
+                    </div>
+                    <div class="field columns">
+                        <div class="column is-3" style="flex-basis:content;align-self:center">
+                            <label class="checkbox">
+                                <input type="checkbox" v-model="draw_arrows">
+                                Draw arrows when below
+                            </label>
+                        </div>
+                        <div class="column is-2">
+                            <div class="control has-icons-right">
+                                <input class="input" type="number" v-model="draw_arrows_threshold">
+                                <span class="icon is-right">%</span>
+                            </div>
+                        </div>
                     </div>
                     <button class="button is-success" @click="render" :disabled="rendering">Visualise</button>
                 </div>
             </form>
         </div>
+        <div class="column is-6" id="mpl-container">
+        </div>
     </div>
 </div>
 <script src="static/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/pyodide/v0.21.0a3/full/pyodide.js"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.21.0/full/pyodide.js"></script>
 <script src="static/main.js"></script>
 </body>
 </html>

@@ -39,7 +39,9 @@ createApp({
                 'significant': 0.75,
                 'severe': 1
             },
-            draw_arrows: false,
+            tight: false,
+            draw_arrows: true,
+            draw_arrows_threshold: 15,
             rendering: false
         }
     }, methods: {
@@ -84,25 +86,29 @@ createApp({
             }
             return ticks;
         },
-        render() {
+        render(evt) {
+            evt.preventDefault();
             let self = this;
             this.rendering = true;
-            for (let child of document.getElementById('root').children) {
+            for (let child of document.getElementById('mpl-container').children) {
                 if (child.id.startsWith('matplotlib_')) {
                     child.remove();
                 }
             }
             pyodide.globals.set('plot_args', JSON.stringify({
                 title: this.titleLines,
+                tight: this.tight,
                 ticks: this.parseTicks(),
                 bars: this.bars.map(b => Object.assign({}, b, {
                     value: b.value / 100,
                     color_value: this.severityConverter[b.severity]
                 })),
-                draw_arrows: this.draw_arrows
+                draw_arrows: [this.draw_arrows, this.draw_arrows_threshold / 100]
             }));
             pyodide.runPythonAsync(`
                 import json
+                #import matplotlib
+                #matplotlib.use("module://matplotlib.backends.html5_canvas_backend")
                 from plasticsplot import plotter
                 plotter.main(json.loads(plot_args))
                 `).finally(() => {

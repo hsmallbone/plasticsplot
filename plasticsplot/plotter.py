@@ -122,8 +122,6 @@ def make_plot(title=None, ticks=None, bars=None, draw_arrows=[False, 0], tight=F
             },
         ]
     bars = list(sorted(bars, key=lambda item: -item['value']))
-    if bars[0]['value'] > ticks[-1]:
-        ticks.append(0.05 * ceil(bars[0]['value'] / 0.05))
     fig = plt.figure()
     fig.set_size_inches(w=10, h=7, forward=True)
 
@@ -139,8 +137,8 @@ def make_plot(title=None, ticks=None, bars=None, draw_arrows=[False, 0], tight=F
 
     ax.set_xticklabels([])
     ax.set_yticks(ticks)
-    ax.set_yticklabels([])
-    ax.set_ylim((0, ticks[-1]))
+    ax.set_yticklabels([]) 
+    ax.set_ylim((0, 0.05 * ceil(bars[0]['value'] / 0.05) if bars[0]['value'] > ticks[-1] else ticks[-1]))
     ax.set_zorder(1)
 
     tick_labels = [str(int(t * 100)) + '%' for t in ticks]
